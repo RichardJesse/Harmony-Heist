@@ -52,9 +52,9 @@ public class spawner : MonoBehaviour
                     int queueIndex = characterqueue.Count - 1;
 
                     //serving point
-                   
+
                     //assign  target position based on  the queue position
-                    character.GetComponent<playercharacter>().SetTargetPositionX(targetPositionsX[queueIndex]);
+                    character.GetComponent<Playercharacter>().SetTargetPositionX(targetPositionsX[queueIndex], targetPositionsX[0]);
                 }
             }
             else
@@ -65,8 +65,7 @@ public class spawner : MonoBehaviour
             yield return new WaitForSeconds(spawnDelay);
         }
     }
-    
-     
+            
    
     
 }
