@@ -10,9 +10,11 @@ public class Playercharacter : MonoBehaviour
       private float targetPositionX;
       private bool ismoving;
       private float servingplace;
-
+      private bool isexiting;
+ 
     //event 
     public static event Action<Playercharacter> onReachingServicePoint;
+    public static event Action<Playercharacter> onReachingExitPoint;
     
      void Update()
     {  if (ismoving)
@@ -26,6 +28,15 @@ public class Playercharacter : MonoBehaviour
         targetPositionX = positionX;
         servingplace = servingpoint;
         ismoving = true;
+        isexiting = false;
+    }
+
+    public void SetExitPosition(float exitposition)
+    {
+        targetPositionX = exitposition;
+        ismoving = true;
+        isexiting = true;
+        
     }
     public void automaticplayermove()
     {
@@ -34,6 +45,12 @@ public class Playercharacter : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, movement, speed *Time.deltaTime);
 
         if (Mathf.Approximately(transform.position.x, targetPositionX)) {
+            if (isexiting)
+            {
+                Debug.Log("Player" + gameObject.name + "has exited the game scene");
+                //fire of an event to destroy the game object
+                onReachingExitPoint?.Invoke(this);
+            }
              if(IsAtServingPlace())
             {
                 Debug.Log("Player" + gameObject.name +"has reached the serving point");
@@ -58,5 +75,7 @@ public class Playercharacter : MonoBehaviour
     {
         return Mathf.Approximately(targetPositionX, servingplace);
     }
+
+   
 }
    
