@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02b371936eeaeb42aacfee27fb466a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  exitpoint: 40
   targetPositionsX:
   - 8
   - 4
@@ -583,7 +584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11901e6e4d970834cb89aac6bbbd65d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playercharacter: {fileID: 0}
 --- !u!4 &1577016458
 Transform:
   m_ObjectHideFlags: 0
