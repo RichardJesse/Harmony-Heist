@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ferro-entertainment/food-restaurant-tycoon-2d/Source files/Cookinggamescene.unity
     guid: ef0e1528463603b4797233f14f057a9e
+  - enabled: 1
+    path: Assets/City Pack/Scenes/SampleScene.unity
+    guid: b526b1e1b5ffea940b0d603169aab076
   m_configObjects: {}
