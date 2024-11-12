@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class serve : MonoBehaviour
 {
-
+   // [SerializeField] GameObject Burger;
     public static event EventHandler ServeCompleted;
-    private Playercharacter playercharactertoserve = null;
+    Playercharacter characterserved = null;
+     Playercharacter playercharactertoserve = null;
     private Playercharacter playercharactertodestroy = null;
     bool isreadytoserve = false;
     bool destroy = false;
@@ -24,6 +25,7 @@ public class serve : MonoBehaviour
     {
         Playercharacter.onReachingServicePoint += Playercharacter_onReachingServicePoint;
         Playercharacter.onReachingExitPoint += Playercharacter_onReachingExitPoint;
+        Burger.OnBurgerServed += Burger_OnBurgerServed;
     }
 
     
@@ -34,15 +36,21 @@ public class serve : MonoBehaviour
         Playercharacter.onReachingExitPoint += Playercharacter_onReachingExitPoint;
     }
 
+    private void Burger_OnBurgerServed(Playercharacter servedplayer)
+    {
+        characterserved = servedplayer;
+    }
+
 
     private void Playercharacter_onReachingServicePoint(Playercharacter playercharacter)
     {
 
         playercharactertoserve = playercharacter;
         isreadytoserve = true;
-            
-         
-      
+       
+
+
+
     }
 
     private void Playercharacter_onReachingExitPoint(Playercharacter obj)
@@ -53,7 +61,7 @@ public class serve : MonoBehaviour
 
     private void serveuser()
     {      // basic  serve functionality will work on it  later
-        if (Input.GetKeyDown(KeyCode.B) && isreadytoserve)
+        if (characterserved==playercharactertoserve && isreadytoserve)
         {
 
             Debug.Log("Player" + playercharactertoserve.gameObject.name + "has been served");
@@ -73,13 +81,15 @@ public class serve : MonoBehaviour
     {
         if (destroy)
         {
-            if (playercharactertodestroy!=null)
+            if (playercharactertodestroy != null)
             {
 
-                Debug.Log(playercharactertodestroy.gameObject.name+"has been destroyed");  
+                Debug.Log(playercharactertodestroy.gameObject.name + "has been destroyed");
+                Destroy(playercharactertodestroy.gameObject);
                 destroy = false;
             }
         }
-        
+
     }
+
 }
