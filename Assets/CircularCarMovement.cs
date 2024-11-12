@@ -10,9 +10,10 @@ public class CircularCarMovement : MonoBehaviour
     public Vector3 stoppingPointOffset;
     public float stopDistance = 0.5f;
     public float stoppingDuration;
-    public float totalStoppingTime;    
-    public float straightMoveDistance = 5f;  
-    public float straightMoveSpeed = 5f;     
+    public float totalStoppingTime;
+    public float straightMoveDistance = 5f;
+    public float straightMoveSpeed = 5f;
+    public float turnDuration = 0.5f;
 
     private static bool allCarsStopped = false;
     private static CircularCarMovement currentStoppingCar = null;
@@ -20,7 +21,7 @@ public class CircularCarMovement : MonoBehaviour
 
     private bool isStopped = false;
     private bool stopPointValid = true;
-    private bool isMovingStraight = false;  
+    private bool isMovingStraight = false;
 
     void Start()
     {
@@ -33,8 +34,8 @@ public class CircularCarMovement : MonoBehaviour
         {
             if (isMovingStraight)
             {
-                yield return MoveStraightAndTurn();
-                yield break; 
+                yield return MoveTurnMove();
+                yield break;
             }
 
             if (!allCarsStopped || currentStoppingCar == this)
@@ -105,7 +106,6 @@ public class CircularCarMovement : MonoBehaviour
             }
         }
 
-
         isStopped = true;
     }
 
@@ -120,12 +120,20 @@ public class CircularCarMovement : MonoBehaviour
         isStopped = false;
     }
 
-    private IEnumerator MoveStraightAndTurn()
+    private IEnumerator MoveTurnMove()
     {
-        
-        Vector3 forwardDirection = transform.up;
+        Quaternion startRotation = transform.rotation;
+        Quaternion firstTurnRotation = startRotation * Quaternion.Euler(0, 0, -90); 
+        float turnElapsed = 0f;
 
-       
+        while (turnElapsed < turnDuration)
+        {
+            turnElapsed += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(startRotation, firstTurnRotation, turnElapsed / turnDuration);
+            yield return null;
+        }
+
+        Vector3 forwardDirection = transform.up;
         float distanceMoved = 0f;
         while (distanceMoved < straightMoveDistance)
         {
@@ -135,7 +143,16 @@ public class CircularCarMovement : MonoBehaviour
             yield return null;
         }
 
-        transform.Rotate(90, 0, 0);
+        startRotation = transform.rotation;
+        Quaternion secondTurnRotation = startRotation * Quaternion.Euler(0, 0, 90); 
+        turnElapsed = 0f;
+
+        while (turnElapsed < turnDuration)
+        {
+            turnElapsed += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(startRotation, secondTurnRotation, turnElapsed / turnDuration);
+            yield return null;
+        }
 
         forwardDirection = transform.up;
 
@@ -146,4 +163,3 @@ public class CircularCarMovement : MonoBehaviour
         }
     }
 }
-    

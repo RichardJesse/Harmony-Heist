@@ -229,6 +229,7 @@ MonoBehaviour:
   totalStoppingTime: 10
   straightMoveDistance: 5
   straightMoveSpeed: 5
+  turnDuration: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,6 +442,7 @@ MonoBehaviour:
   totalStoppingTime: 10
   straightMoveDistance: 5
   straightMoveSpeed: 5
+  turnDuration: 0.5
 --- !u!1 &1191811086
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,10 +546,11 @@ MonoBehaviour:
   radius: 5
   stoppingPointOffset: {x: 0.74, y: -3.71, z: 0}
   stopDistance: 0.5
-  stoppingDuration: 5
+  stoppingDuration: 6
   totalStoppingTime: 10
   straightMoveDistance: 5
   straightMoveSpeed: 5
+  turnDuration: 0.5
 --- !u!1 &1291946382
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +743,7 @@ MonoBehaviour:
   totalStoppingTime: 10
   straightMoveDistance: 5
   straightMoveSpeed: 5
+  turnDuration: 0.5
 --- !u!1 &2122120284
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,6 +851,7 @@ MonoBehaviour:
   totalStoppingTime: 10
   straightMoveDistance: 5
   straightMoveSpeed: 5
+  turnDuration: 0.5
 --- !u!1001 &783501789050199343
 PrefabInstance:
   m_ObjectHideFlags: 0
