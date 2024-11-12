@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class CircularCarMovement : MonoBehaviour
 {
-    public Transform pivotPoint;               // The center point around which cars rotate
-    public float rotationSpeed = 30f;          // Speed of rotation (degrees per second)
-    public float radius = 5f;                  // Radius of the circular path
-    public Vector3 stoppingPointOffset;        // Offset from pivotPoint for the shared stopping point
-    public float stopDistance = 0.5f;          // Distance at which cars stop at the stopping point
-    public float stoppingDuration;             // Unique stop duration for this car
+    public Transform pivotPoint;
+    public float rotationSpeed = 30f;
+    public float radius = 5f;
+    public Vector3 stoppingPointOffset;
+    public float stopDistance = 0.5f;
+    public float stoppingDuration;
+    public float totalStoppingTime;    
+    public float straightMoveDistance = 5f;  
+    public float straightMoveSpeed = 5f;     
 
-    private static bool allCarsStopped = false;          // Global flag to stop all cars
-    private static CircularCarMovement currentStoppingCar = null; // Tracks which car is stopping
+    private static bool allCarsStopped = false;
+    private static CircularCarMovement currentStoppingCar = null;
+    private static List<CircularCarMovement> nearbyCars = new List<CircularCarMovement>();
+
+    private bool isStopped = false;
+    private bool stopPointValid = true;
+    private bool isMovingStraight = false;  
 
     void Start()
     {
-        // Start the movement coroutine for each car
         StartCoroutine(MoveAlongCircle());
     }
 
@@ -24,37 +31,119 @@ public class CircularCarMovement : MonoBehaviour
     {
         while (true)
         {
-            // Only move the car if allCarsStopped is false
-            if (!allCarsStopped || currentStoppingCar == this)
+            if (isMovingStraight)
             {
-                // Rotate around the pivot point in a 2D context (Z-axis rotation)
-                transform.RotateAround(pivotPoint.position, Vector3.forward, rotationSpeed * Time.deltaTime);
-
-                // Check if this car is close enough to the shared stopping point
-                Vector3 stoppingPoint = GetStoppingPoint();
-                float distanceToStop = Vector3.Distance(transform.position, stoppingPoint);
-
-                // If this car is at the stopping point and no other car is stopping
-                if (distanceToStop <= stopDistance && currentStoppingCar == null)
-                {
-                    // Set this car as the one that stops all cars
-                    currentStoppingCar = this;
-                    allCarsStopped = true;
-                    yield return new WaitForSeconds(stoppingDuration); // Wait for this car's stop duration
-
-                    // Allow all cars to resume movement after the stop duration
-                    allCarsStopped = false;
-                    currentStoppingCar = null;
-                }
+                yield return MoveStraightAndTurn();
+                yield break; 
             }
 
-            yield return null; // Continue to the next frame
+            if (!allCarsStopped || currentStoppingCar == this)
+            {
+                if (!isStopped)
+                {
+                    transform.RotateAround(pivotPoint.position, Vector3.forward, rotationSpeed * Time.deltaTime);
+                }
+
+                Vector3 stoppingPoint = GetStoppingPoint();
+
+                if (IsCloseToStoppingPoint(stoppingPoint) && stopPointValid && currentStoppingCar == null)
+                {
+                    if (totalStoppingTime > 0)
+                    {
+                        currentStoppingCar = this;
+                        allCarsStopped = true;
+
+                        StopNearbyCars();
+
+                        float waitTime = Mathf.Min(stoppingDuration, totalStoppingTime);
+                        yield return new WaitForSeconds(waitTime);
+
+                        totalStoppingTime -= waitTime;
+
+                        ResumeNearbyCars();
+                        allCarsStopped = false;
+                        currentStoppingCar = null;
+
+                        stopPointValid = false;
+                    }
+                    else
+                    {
+                        isMovingStraight = true;
+                    }
+                }
+
+                if (!IsCloseToStoppingPoint(stoppingPoint))
+                {
+                    stopPointValid = true;
+                }
+            }
+            yield return null;
         }
     }
 
     private Vector3 GetStoppingPoint()
     {
-        // Calculate the stopping point position relative to the pivot point
         return pivotPoint.position + stoppingPointOffset;
     }
+
+    private bool IsCloseToStoppingPoint(Vector3 stoppingPoint)
+    {
+        return Vector3.Distance(transform.position, stoppingPoint) <= stopDistance;
+    }
+
+    private void StopNearbyCars()
+    {
+        nearbyCars.Clear();
+
+        CircularCarMovement[] allCars = FindObjectsOfType<CircularCarMovement>();
+        foreach (CircularCarMovement car in allCars)
+        {
+            if (car != this && Vector3.Distance(car.transform.position, this.transform.position) <= radius)
+            {
+                nearbyCars.Add(car);
+                car.isStopped = true;
+            }
+        }
+
+
+        isStopped = true;
+    }
+
+    private void ResumeNearbyCars()
+    {
+        foreach (CircularCarMovement car in nearbyCars)
+        {
+            car.isStopped = false;
+        }
+
+        nearbyCars.Clear();
+        isStopped = false;
+    }
+
+    private IEnumerator MoveStraightAndTurn()
+    {
+        
+        Vector3 forwardDirection = transform.up;
+
+       
+        float distanceMoved = 0f;
+        while (distanceMoved < straightMoveDistance)
+        {
+            float step = straightMoveSpeed * Time.deltaTime;
+            transform.position += forwardDirection * step;
+            distanceMoved += step;
+            yield return null;
+        }
+
+        transform.Rotate(90, 0, 0);
+
+        forwardDirection = transform.up;
+
+        while (true)
+        {
+            transform.position += forwardDirection * straightMoveSpeed * Time.deltaTime;
+            yield return null;
+        }
+    }
 }
+    
