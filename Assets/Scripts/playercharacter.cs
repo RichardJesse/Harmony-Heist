@@ -5,16 +5,21 @@ using UnityEngine;
 
 public class Playercharacter : MonoBehaviour
 {
-
+     [SerializeField] private PlayerDataSO PlayerData;
     [SerializeField] private float speed;
+    
+    
       private float targetPositionX;
       private bool ismoving;
       private float servingplace;
       private bool isexiting;
- 
+      private int queueEntryTime = -1;
+      private int ServicePointEntryTime = 0;
     //event 
     public static event Action<Playercharacter> onReachingServicePoint;
     public static event Action<Playercharacter> onReachingExitPoint;
+    public static event Action<Playercharacter> onReachingQueuePoint;
+    
     
      void Update()
     {  if (ismoving)
@@ -47,18 +52,26 @@ public class Playercharacter : MonoBehaviour
         if (Mathf.Approximately(transform.position.x, targetPositionX)) {
             if (isexiting)
             {
-                Debug.Log("Player" + gameObject.name + "has exited the game scene");
+                // Debug.Log(PlayerData.playername + "has exited the game scene");
                 //fire of an event to destroy the game object
                 onReachingExitPoint?.Invoke(this);
             }
-             if(IsAtServingPlace())
+             if (IsAtServingPlace())
             {
-                Debug.Log("Player" + gameObject.name +"has reached the serving point");
-                  //fire of the event to be handled by serving logic
+
+                  
+                //fire of the event to be handled by serving logic
                 onReachingServicePoint?.Invoke(this);
+              
             }
-            Debug.Log("Player" + gameObject.name +"reached  respective target position");
-           
+             
+            
+               
+               
+                onReachingQueuePoint?.Invoke(this);
+               
+
+            
            
 
            
@@ -67,7 +80,7 @@ public class Playercharacter : MonoBehaviour
         }
         else
         {
-            Debug.Log("Player" + gameObject.name +"moving towards target direction");
+            Debug.Log(PlayerData.playername + "moving towards target direction");
         }
 
     }
@@ -76,6 +89,29 @@ public class Playercharacter : MonoBehaviour
         return Mathf.Approximately(targetPositionX, servingplace);
     }
 
-   
+    public PlayerDataSO GetPlayerData()
+    {
+        return PlayerData;
+    }
+
+    public int SetQueueEntryTime()
+    {
+        if (queueEntryTime< 0)
+        {
+              queueEntryTime = Mathf.FloorToInt( Time.time);
+            
+           
+        }
+          return queueEntryTime;
+    }
+     
+
+    public int SetServicePointEntryTime()
+    {
+        ServicePointEntryTime = Mathf.FloorToInt(Time.time);
+        return ServicePointEntryTime;
+    }
+
+    
+
 }
-   

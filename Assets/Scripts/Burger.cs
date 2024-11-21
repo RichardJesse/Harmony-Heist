@@ -43,7 +43,7 @@ public class Burger : MonoBehaviour
     {
          character = collider.GetComponent<Playercharacter>();
         if (character != null) {
-            Debug.Log("Burger served to " + character.gameObject.name);
+          //  Debug.Log("Burger served to " + character.gameObject.name);
             OnBurgerServed?.Invoke(character);
             Destroy(gameObject);
             
