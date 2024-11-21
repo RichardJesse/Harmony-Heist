@@ -12,12 +12,19 @@ public class spawner : MonoBehaviour
      private Queue<GameObject> characterqueue = new Queue<GameObject>();
      private float spawnDelay =2f;
      private HashSet<string> spawnedPrefabs = new HashSet<string>();
+     private List<Playercharacter> characterlist = new List<Playercharacter>();
      private bool queueDequeue = false;
+    private bool queueProcessed = false;
       GameObject dequeuedgameobject;
       private  PlayerDataSO player;
-    
+      private Playercharacter dequeuedplayer;
+       private string name;
+      private int turnaroundtime;
+      private int waitingtime;
 
-
+      private int totalturnaroundtime =0;
+      private int totalwaitingtime= 0;
+    private bool isvalid = false;
 
     void Start()
     {
@@ -38,6 +45,7 @@ public class spawner : MonoBehaviour
 
            
         }
+        DisplayResults();
     }
     private IEnumerator spawnObjects()
     {
@@ -99,11 +107,13 @@ public class spawner : MonoBehaviour
     private  void dequeuePlayer()
     {
         if (characterqueue.Count > 0) {
-              dequeuedgameobject = characterqueue.Dequeue();
-            dequeuedgameobject.GetComponent<Playercharacter>().SetExitPosition(exitpoint);
-             Debug.Log(dequeuedgameobject.GetComponent<Playercharacter>().GetPlayerData().playername+" Player has exited the queue: " ); 
+            queueProcessed = true;  
+            dequeuedgameobject = characterqueue.Dequeue();
+            dequeuedplayer = dequeuedgameobject.GetComponent<Playercharacter>();
+                dequeuedplayer.SetExitPosition(exitpoint);
+             Debug.Log(dequeuedplayer.GetPlayerData().playername+" P has exited the queue: " ); 
 
-           
+            characterlist.Add(dequeuedplayer);
             
         }
         else
@@ -147,6 +157,31 @@ public class spawner : MonoBehaviour
         return characterqueue;
     }
 
+    // display the results once everybody quits the line
+    public void DisplayResults()
+    {
+        if (characterqueue.Count == 0 && queueProcessed)
+        {
+            foreach(var character in characterlist)
+            {
+                player = character.GetPlayerData();
+                name = player.playername;
+                turnaroundtime = player.turnaroundTime;
+                waitingtime = player.waitingTime;
+                totalturnaroundtime += turnaroundtime;
+                totalwaitingtime += waitingtime;
+
+                Debug.Log(name+" turnaroundtime :"+turnaroundtime+"waitingtime:"+waitingtime);
+                isvalid = true;
+            }
+            isvalid = true;
+            if (isvalid)
+            {
+                Debug.Log("totalturnaroundtime:" + totalturnaroundtime + "totalwaitingtime:" + totalwaitingtime);
+                isvalid = false;
+            }
+        }
+    }
 }
 
 

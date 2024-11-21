@@ -30,7 +30,7 @@ public class serve : MonoBehaviour
     {
        
         serveuser();
-        Destroy();
+       // Destroy();
        //  Debug.Log( characterqueue.Count);
        
     }
@@ -121,7 +121,7 @@ public class serve : MonoBehaviour
         }
     }
 
-    private void Destroy()
+  /*  private void Destroy()
     {
         if (destroy)
         {
@@ -134,7 +134,7 @@ public class serve : MonoBehaviour
             }
         }
 
-    }
+    }*/
    
 
     
