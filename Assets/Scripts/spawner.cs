@@ -14,7 +14,8 @@ public class spawner : MonoBehaviour
      private HashSet<string> spawnedPrefabs = new HashSet<string>();
      private bool queueDequeue = false;
       GameObject dequeuedgameobject;
-      
+      private  PlayerDataSO player;
+    
 
 
 
@@ -55,12 +56,15 @@ public class spawner : MonoBehaviour
                   //if unique instantiate the object and add to the 
                 GameObject character = Instantiate(prefab, transform.position, Quaternion.identity);
                 spawnedPrefabs.Add(prefabName);
+                
                 if (character != null)
                 {
-                    Debug.Log("Character spawned successfully!");
+                 //   player = character.GetComponent<Playercharacter>().GetPlayerData();
+
+                  //  player.arrivalTime = Mathf.FloorToInt(Time.time);
                     // add character to the queue for serving
                     characterqueue.Enqueue(character);
-                   
+                  //  Debug.Log(player.playername + "has been added to the queue" +player.arrivalTime);
                     int queueIndex = QueueIndex();
 
                      
@@ -69,10 +73,7 @@ public class spawner : MonoBehaviour
                     character.GetComponent<Playercharacter>().SetTargetPositionX(targetPositionsX[queueIndex], targetPositionsX[0]);
                 }
             }
-            else
-            {
-                Debug.Log("Character already spawned");
-            }
+            
            
             yield return new WaitForSeconds(spawnDelay);
         }
@@ -100,7 +101,7 @@ public class spawner : MonoBehaviour
         if (characterqueue.Count > 0) {
               dequeuedgameobject = characterqueue.Dequeue();
             dequeuedgameobject.GetComponent<Playercharacter>().SetExitPosition(exitpoint);
-             Debug.Log("Dequeued Player: " + dequeuedgameobject.name); 
+             Debug.Log(dequeuedgameobject.GetComponent<Playercharacter>().GetPlayerData().playername+" Player has exited the queue: " ); 
 
            
             
@@ -119,6 +120,8 @@ public class spawner : MonoBehaviour
 
     private IEnumerator updatePlayerMovement()
     {
+      
+     
         List<GameObject> charactersToMove = new List<GameObject>(characterqueue);
         int newIndex = 0;
         foreach (var character in charactersToMove) {
@@ -137,6 +140,11 @@ public class spawner : MonoBehaviour
             yield return new WaitForSeconds(0.9f);
 
         }
+    }
+
+    public Queue<GameObject> GetQueue()
+    {
+        return characterqueue;
     }
 
 }

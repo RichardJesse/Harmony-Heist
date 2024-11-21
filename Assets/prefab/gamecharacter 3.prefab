@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e84a6d47a1ce6418f4b4e841227210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerData: {fileID: 11400000, guid: ddcf7cda55c694c46bf4639355b3d5dd, type: 2}
   speed: 5
 --- !u!70 &4242108514988542247
 CapsuleCollider2D:
