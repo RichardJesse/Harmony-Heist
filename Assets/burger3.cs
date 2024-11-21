@@ -16,13 +16,16 @@ public class burger3 : MonoBehaviour
         }
 
         Debug.Log("Starting TurnBlackAfterDelay coroutine.");
-        StartCoroutine(TurnBlackAfterDelay(40f));
+        StartCoroutine(TurnBlackAfterDelay(40f)); // 40 seconds delay
     }
 
     private IEnumerator TurnBlackAfterDelay(float delay)
     {
         Debug.Log($"Waiting for {delay} seconds.");
         yield return new WaitForSeconds(delay);
+
+        burgerRenderer.material = new Material(burgerRenderer.sharedMaterial);
+
 
         if (burgerRenderer != null)
         {
