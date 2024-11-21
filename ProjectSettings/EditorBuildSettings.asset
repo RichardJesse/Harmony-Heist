@@ -9,9 +9,10 @@ EditorBuildSettings:
     path: Assets/ElvGames/Fantasy Dreamland Reborn/Tilesets/Laboratory/Ex_Laboratory.unity
     guid: 67fc8d6afcfbb8f40b8ac1a83cab78db
   - enabled: 1
-    path: Assets/ferro-entertainment/food-restaurant-tycoon-2d/Source files/Cookinggamescene/Cookinggamescene.unity
+    path: Assets/ferro-entertainment/food-restaurant-tycoon-2d/Source files/LRUingredients.unity
     guid: ef0e1528463603b4797233f14f057a9e
   - enabled: 1
     path: Assets/City Pack/Scenes/SampleScene.unity
     guid: b526b1e1b5ffea940b0d603169aab076
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
