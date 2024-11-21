@@ -45,7 +45,11 @@ public class spawner : MonoBehaviour
 
            
         }
-        DisplayResults();
+        
+        
+            DisplayResults();
+       
+        
     }
     private IEnumerator spawnObjects()
     {
@@ -160,29 +164,38 @@ public class spawner : MonoBehaviour
     // display the results once everybody quits the line
     public void DisplayResults()
     {
-        if (characterqueue.Count == 0 && queueProcessed)
+        if (characterqueue.Count == 0 )
         {
-            foreach(var character in characterlist)
+            if (queueProcessed)
             {
-                player = character.GetPlayerData();
-                name = player.playername;
-                turnaroundtime = player.turnaroundTime;
-                waitingtime = player.waitingTime;
-                totalturnaroundtime += turnaroundtime;
-                totalwaitingtime += waitingtime;
+                foreach (var character in characterlist)
+                {
+                    player = character.GetPlayerData();
+                    name = player.playername;
+                    turnaroundtime = player.turnaroundTime;
+                    waitingtime = player.waitingTime;
+                    totalturnaroundtime += turnaroundtime;
+                    totalwaitingtime += waitingtime;
 
-                Debug.Log(name+" turnaroundtime :"+turnaroundtime+"waitingtime:"+waitingtime);
-                isvalid = true;
+                    Debug.Log(name + " turnaroundtime :" + turnaroundtime + "waitingtime:" + waitingtime);
+                    
+                }
+                queueProcessed = false;
             }
-            isvalid = true;
-            if (isvalid)
+            else
             {
                 Debug.Log("totalturnaroundtime:" + totalturnaroundtime + "totalwaitingtime:" + totalwaitingtime);
-                isvalid = false;
+            }
+            
+            
+               
+              
             }
         }
+       
+
     }
-}
+
 
 
 
